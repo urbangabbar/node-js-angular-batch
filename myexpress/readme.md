@@ -1,11 +1,11 @@
 GET /api/book --> This would get all users
-GET /api/book/:bookid -->GET /api/user/123 this would single book
+GET /api/book/:bookid -->GET /api/book/123 this would single book
 
 POST /api/book  Help us create new book
 
-PUT /api/book/<userid> //Update 
+PUT /api/book/<bookid> //Update 
 
-DELETE /api/book/<userid> Delete a book
+DELETE /api/book/<bookid> Delete a book
 
 Books JSON
 {
