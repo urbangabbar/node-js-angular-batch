@@ -1,12 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const { Book } = require('./model/book')
 
+
 const app = express()
 app.use(bodyParser.json())
-
-const books = [];
 
 app.post("/api/book", async (req, res) => {
     const newBookBody = req.body
@@ -58,8 +58,8 @@ app.put("/api/book/:bookid", async (req, res) => {
     }
 })
 
-mongoose.connect('mongodb+srv://abhinav:yUj5GxHhxGPx27p@angular-batch.davyyxc.mongodb.net/?retryWrites=true&w=majority').then(() => {
-    app.listen(8080, () => {
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    app.listen(process.env.PORT, () => {
         console.log("Started listening on port 8080")
     })
 }).catch(err => console.error(err));
