@@ -15,14 +15,16 @@ app.post("/api/book", async (req, res) => {
     res.send(newBook, 201)
 })
 
-app.get("/api/book",async (req, res) => {
-   const books = await Book.find({});
-   res.send(books, 200)
+app.get("/api/book", async (req, res) => {
+    const books = await Book.find({});
+    res.send(books, 200)
 })
 
 app.get("/api/book/:bookid", async (req, res) => {
+    // path params always come as string bu tmongo stores them ast objectid
+    // so we would need to convert strung to objectid
     const bookid = new mongoose.Types.ObjectId(req.params.bookid);
-    const book = await Book.findOne({_id: bookid})
+    const book = await Book.findOne({ _id: bookid })
 
     if (book) {
         return res.send(book)
@@ -31,24 +33,26 @@ app.get("/api/book/:bookid", async (req, res) => {
     }
 })
 
-app.delete("/api/book/:bookid", (req, res) => {
-    const bookid = parseInt(req.params.bookid);
-    const indexOfBook = books.findIndex(book => book.id === bookid);
-    if (indexOfBook > -1) {
-        books.splice(indexOfBook, 1);
+app.delete("/api/book/:bookid", async (req, res) => {
+    const bookid = new mongoose.Types.ObjectId(req.params.bookid);
+    const book = await Book.findOneAndDelete({ _id: bookid })
+    if (book) {
         return res.send("Deleted")
     } else {
         return res.send("Not found", 404)
     }
 })
 
-app.put("/api/book/:bookid", (req, res) => {
+app.put("/api/book/:bookid", async (req, res) => {
     const newDataBook = req.body;
-    const bookid = parseInt(req.params.bookid);
-    const indexOfBook = books.findIndex(book => book.id === bookid);
-    if (indexOfBook > -1) {
-        books[indexOfBook] = newDataBook;
-        return res.send("Book updated succesfully")
+    const bookid = new mongoose.Types.ObjectId(req.params.bookid);
+    const updatedBook = await Book.findOneAndUpdate({
+        _id: bookid
+    }, newDataBook, {
+        new: true
+      });
+    if (updatedBook) {
+        return res.send(updatedBook)
     } else {
         return res.send("Not found", 404)
     }
